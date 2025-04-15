@@ -1,0 +1,65 @@
+/* Navbar.css */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3333334e;
+    color: #fff;
+    padding: 15px;
+    z-index: 1000; /* Ensure it's on top of other content */
+    transition: background-color 200ms ease;
+  }
+  
+  .left {
+    display: flex;
+    margin-left: 2vw;
+  }
+  
+  .right {
+    display: flex;
+    align-items: center;
+    margin-right: 4vw;
+  }
+  
+  .logo,
+  .iiitn,
+  .crispr,
+  .notices {
+    margin-right: 15px;
+  }
+  .scrolled {
+    background-color: #333333ea; /* Change to the original color when scrolled */
+
+  }
+  .dropdown {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    background-color: #333; /* Match with navbar color */
+    width: 8vw;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    left: -2vw; /* Adjust the value to move it more to the left */
+  }
+  
+  .dropdown-content div {
+    padding: 10px;
+    cursor: pointer;
+    color: white; /* Change text color to white */
+  }
+  .dropdown-content {
+    display: none;
+  }
+  
+  
