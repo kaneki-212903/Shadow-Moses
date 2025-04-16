@@ -1,41 +1,44 @@
-require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
-const connection = require("./db");
-const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/auth");
-const { createUserProfile } = require('./controllers/profilecontroller');
-const uploadcontrol = require('./controllers/uploadcontrol');
-const authtoken = require('./middlewares/authtoken');
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const helmet = require("helmet");
 const morgan = require("morgan");
+const cors = require("cors");
 
+const userRoute = require("./routes/users");
+const authRoute = require("./routes/auth");
+const postRoute = require("./routes/posts");
+const messageRoute = require("./routes/messages");
+const connectionRoute = require("./routes/connections");
+const recommendationRoute = require("./routes/recommendations");
+
+dotenv.config();
 const app = express();
 
-// database connection
-connection();
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true })
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
-// middlewares
+// Middleware
+app.use(cors());
 app.use(express.json());
-const corsOptions = {
-    origin: 'http://localhost:3000',
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-    optionsSuccessStatus: 204,
-  };
-  
-app.use(cors(corsOptions));
-app.use((req, res, next) => {
-  // Log the headers of the incoming request
-  console.log('Request Headers:', req.headers);
+app.use(helmet());
+app.use(morgan("common"));
 
-  // Move to the next middleware in the chain
-  next();
+// API Routes
+app.use("/api/users", userRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/posts", postRoute);
+app.use("/api/messages", messageRoute);
+app.use("/api/connections", connectionRoute);
+app.use("/api/recommendations", recommendationRoute);
+
+// Root health check
+app.get("/", (req, res) => {
+  res.send("🚀 Shadow Moses backend running...");
 });
-app.use(morgan("dev"));
-// routes
-app.post('/upload',authtoken,uploadcontrol.upload.single('image'), createUserProfile);
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
 
-const port = process.env.PORT || 8080;
-app.listen(port, console.log(`Listening on port ${port}...`));
+const PORT = process.env.PORT || 8800;
+app.listen(PORT, () => {
+  console.log(`🌐 Server running at http://localhost:${PORT}`);
+});
